@@ -1,0 +1,321 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{display:flex;height:640px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;background:var(--color-background-primary)}
+.sidebar{width:200px;border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;flex-shrink:0;background:var(--color-background-secondary)}
+.sidebar-header{padding:14px 16px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.sidebar-header p{font-size:11px;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px}
+.sidebar-header h3{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.pod-list{flex:1;overflow-y:auto;padding:8px}
+.pod-item{padding:8px 10px;border-radius:var(--border-radius-md);cursor:pointer;font-size:13px;color:var(--color-text-secondary);display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.pod-item:hover{background:var(--color-background-primary)}
+.pod-item.active{background:var(--color-background-primary);color:var(--color-text-primary);font-weight:500;border:0.5px solid var(--color-border-tertiary)}
+.pod-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sidebar-footer{padding:10px 8px;border-top:0.5px solid var(--color-border-tertiary)}
+.nav-btn{width:100%;padding:8px 10px;border-radius:var(--border-radius-md);border:none;background:transparent;cursor:pointer;font-size:12px;color:var(--color-text-secondary);display:flex;align-items:center;gap:8px;text-align:left}
+.nav-btn:hover{background:var(--color-background-primary);color:var(--color-text-primary)}
+.nav-btn.active{background:var(--color-background-primary);color:var(--color-text-primary);font-weight:500}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{padding:14px 20px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.topbar h2{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.role-badge{font-size:11px;padding:3px 8px;border-radius:var(--border-radius-md);background:var(--color-background-info);color:var(--color-text-info);font-weight:500}
+.content{flex:1;overflow-y:auto;padding:16px 20px}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.section-title{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.05em}
+.btn{padding:6px 12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;cursor:pointer;font-size:12px;color:var(--color-text-primary);display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:var(--color-background-secondary)}
+.btn-primary{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.btn-primary:hover{opacity:0.85;background:var(--color-text-primary)}
+.client-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.client-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px;cursor:pointer}
+.client-card:hover{border-color:var(--color-border-secondary)}
+.client-card.selected{border-width:1.5px;border-color:var(--color-border-primary)}
+.client-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.client-meta{font-size:11px;color:var(--color-text-tertiary);margin-bottom:10px}
+.goal-count{display:inline-flex;align-items:center;gap:4px;font-size:11px;background:var(--color-background-secondary);padding:3px 8px;border-radius:var(--border-radius-md);color:var(--color-text-secondary)}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:16px 0}
+.goal-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.goal-header{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.goal-header:hover{background:var(--color-background-primary)}
+.goal-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.goal-subtitle{font-size:11px;color:var(--color-text-tertiary);margin-top:2px}
+.tabs{display:flex;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary)}
+.tab{padding:8px 14px;font-size:12px;cursor:pointer;color:var(--color-text-secondary);border-bottom:2px solid transparent;margin-bottom:-0.5px;white-space:nowrap}
+.tab:hover{color:var(--color-text-primary)}
+.tab.active{color:var(--color-text-primary);font-weight:500;border-bottom-color:var(--color-text-primary)}
+.tab-body{background:var(--color-background-primary);padding:14px}
+.tab-text{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:14px;white-space:pre-line}
+.attachments-label{font-size:11px;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;font-weight:500}
+.file-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.file-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-secondary)}
+.file-left{display:flex;align-items:center;gap:8px}
+.file-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.file-icon.pdf{background:#FAECE7;color:#993C1D}
+.file-icon.img{background:#E1F5EE;color:#0F6E56}
+.file-icon.doc{background:#E6F1FB;color:#185FA5}
+.file-icon.xls{background:#EAF3DE;color:#3B6D11}
+.file-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.file-size{font-size:11px;color:var(--color-text-tertiary)}
+.file-actions{display:flex;gap:6px}
+.icon-btn{background:none;border:none;cursor:pointer;color:var(--color-text-tertiary);padding:4px;border-radius:4px;font-size:15px;display:flex;align-items:center}
+.icon-btn:hover{color:var(--color-text-primary);background:var(--color-background-primary)}
+.upload-zone{border:1px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);padding:14px;text-align:center;cursor:pointer;color:var(--color-text-tertiary);font-size:12px}
+.upload-zone:hover{border-color:var(--color-border-primary);color:var(--color-text-secondary);background:var(--color-background-secondary)}
+.weekly-table{width:100%;border-collapse:collapse;font-size:12px}
+.weekly-table th{text-align:left;padding:6px 10px;color:var(--color-text-tertiary);font-weight:500;border-bottom:0.5px solid var(--color-border-tertiary);font-size:11px;text-transform:uppercase;letter-spacing:0.04em}
+.weekly-table td{padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.weekly-table tr:last-child td{border-bottom:none}
+.status-pill{display:inline-block;padding:2px 8px;border-radius:var(--border-radius-md);font-size:11px;font-weight:500}
+.status-done{background:#EAF3DE;color:#3B6D11}
+.status-pending{background:#FAEEDA;color:#854F0B}
+.metric-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:14px}
+.metric-label{font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em}
+.metric-value{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.chevron{transition:transform 0.2s;font-size:14px}
+.chevron.open{transform:rotate(180deg)}
+.empty-state{text-align:center;padding:32px;color:var(--color-text-tertiary);font-size:13px}
+</style>
+
+<h2 class="sr-only">Pod management dashboard with file attachments on goal tabs</h2>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <p>Workspace</p>
+      <h3>Agency Pods</h3>
+    </div>
+    <div class="pod-list" id="podList"></div>
+    <div class="sidebar-footer">
+      <button class="nav-btn" id="weeklyBtn" onclick="showView('weekly')"><i class="ti ti-calendar" aria-hidden="true"></i> Weekly goals</button>
+      <button class="nav-btn" id="reportBtn" onclick="showView('report')"><i class="ti ti-chart-bar" aria-hidden="true"></i> Reports</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <h2 id="mainTitle">Pod Alpha</h2>
+      <span class="role-badge" id="roleBadge">Pod Manager</span>
+    </div>
+    <div class="content" id="mainContent"></div>
+  </div>
+</div>
+
+<script>
+const pods=[
+  {id:1,name:"Pod Alpha",color:"#7F77DD",clients:[
+    {id:1,name:"Bloom Bakery",industry:"F&B",goals:[
+      {id:1,title:"Website redesign",created:"Jun 2025",tabs:{
+        goal:{text:"Redesign the full website with a new brand identity. Deliver responsive layout with booking integration and updated menu pages.",files:[{name:"brief_v2.pdf",size:"340 KB",type:"pdf"},{name:"brand_assets.zip",size:"12 MB",type:"doc"}]},
+        stop:{text:"Do not change existing logo or brand colours. Avoid adding third-party chat widgets.",files:[]},
+        start:{text:"Kick off discovery call with client. Begin wireframes for homepage and menu page.",files:[{name:"wireframe_draft.fig",size:"2.1 MB",type:"doc"}]},
+        continue:{text:"Monitor uptime weekly. Check contact form submissions every Monday.",files:[{name:"uptime_report_may.pdf",size:"180 KB",type:"pdf"}]}
+      }},
+      {id:2,title:"Google Ads campaign",created:"May 2025",tabs:{
+        goal:{text:"Run targeted Google Ads for summer promotions. Target radius 10km around store location.",files:[{name:"ads_strategy.pdf",size:"520 KB",type:"pdf"}]},
+        stop:{text:"Do not run ads on competitor brand terms. Stay within £500/month budget.",files:[]},
+        start:{text:"Set up conversion tracking. Create 3 ad variations for A/B testing.",files:[{name:"ad_copy_v1.docx",size:"45 KB",type:"doc"}]},
+        continue:{text:"Review ad performance every Friday. Send client report on 1st of each month.",files:[{name:"june_report.xlsx",size:"210 KB",type:"xls"},{name:"ad_screenshot.png",size:"890 KB",type:"img"}]}
+      }}
+    ]},
+    {id:2,name:"CoreFit Gym",industry:"Health",goals:[
+      {id:3,title:"SEO growth plan",created:"Jun 2025",tabs:{
+        goal:{text:"Improve organic rankings for 10 target keywords in 90 days. Focus on local SEO.",files:[{name:"keyword_research.xlsx",size:"320 KB",type:"xls"}]},
+        stop:{text:"Do not build low-quality backlinks. Avoid keyword stuffing in content.",files:[]},
+        start:{text:"Complete full site audit. Submit updated sitemap to Google Search Console.",files:[{name:"site_audit.pdf",size:"1.2 MB",type:"pdf"}]},
+        continue:{text:"Track keyword positions weekly. Monitor Google My Business reviews.",files:[]}
+      }}
+    ]}
+  ]},
+  {id:2,name:"Pod Beta",color:"#1D9E75",clients:[
+    {id:3,name:"LexLaw Solicitors",industry:"Legal",goals:[
+      {id:4,title:"Brand identity refresh",created:"May 2025",tabs:{
+        goal:{text:"Modernise brand identity including logo, colour palette, and typography. Deliver brand guidelines document.",files:[{name:"brand_guidelines_draft.pdf",size:"4.5 MB",type:"pdf"}]},
+        stop:{text:"Do not make the brand look startup-casual — must remain professional and trustworthy.",files:[]},
+        start:{text:"Present 3 mood boards to client. Get sign-off on direction before design begins.",files:[{name:"moodboard_options.pdf",size:"8.2 MB",type:"pdf"},{name:"reference_logos.png",size:"1.1 MB",type:"img"}]},
+        continue:{text:"Review brand consistency across all client touchpoints monthly.",files:[]}
+      }}
+    ]}
+  ]},
+  {id:3,name:"Pod Gamma",color:"#D85A30",clients:[]},
+  {id:4,name:"Pod Delta",color:"#BA7517",clients:[]}
+];
+
+const weeklyGoals=[
+  {client:"Bloom Bakery",task:"Create new landing page for summer menu",status:"done"},
+  {client:"CoreFit Gym",task:"Fix broken contact form on mobile",status:"done"},
+  {client:"LexLaw Solicitors",task:"SEO audit — identify top 5 issues",status:"pending"},
+  {client:"Bloom Bakery",task:"Monthly ads performance report",status:"pending"},
+  {client:"CoreFit Gym",task:"Update Google My Business photos",status:"done"},
+];
+
+let currentPod=pods[0];
+let selectedClient=null;
+let openGoals={};
+let activeTabs={};
+let currentView="clients";
+
+function init(){renderPodList();renderClients();}
+
+function renderPodList(){
+  document.getElementById("podList").innerHTML=pods.map(p=>`
+    <div class="pod-item ${currentPod.id===p.id&&currentView==='clients'?'active':''}" onclick="switchPod(${p.id})">
+      <span class="pod-dot" style="background:${p.color}"></span>${p.name}
+    </div>`).join("");
+}
+
+function switchPod(id){
+  currentPod=pods.find(p=>p.id===id);
+  currentView="clients";selectedClient=null;openGoals={};activeTabs={};
+  document.getElementById("weeklyBtn").className="nav-btn";
+  document.getElementById("reportBtn").className="nav-btn";
+  renderPodList();renderClients();
+}
+
+function showView(v){
+  currentView=v;selectedClient=null;
+  document.getElementById("weeklyBtn").className="nav-btn"+(v==="weekly"?" active":"");
+  document.getElementById("reportBtn").className="nav-btn"+(v==="report"?" active":"");
+  renderPodList();
+  if(v==="weekly")renderWeekly();
+  if(v==="report")renderReport();
+}
+
+function renderClients(){
+  document.getElementById("mainTitle").textContent=currentPod.name;
+  document.getElementById("roleBadge").textContent="Pod Manager";
+  const c=document.getElementById("mainContent");
+  if(!currentPod.clients.length){
+    c.innerHTML=`<div class="empty-state"><i class="ti ti-users" style="font-size:32px;margin-bottom:8px;display:block" aria-hidden="true"></i>No clients in this pod yet</div>`;return;
+  }
+  const sel=selectedClient||currentPod.clients[0];
+  c.innerHTML=`
+    <div class="section-header">
+      <span class="section-title">Clients</span>
+      <button class="btn btn-primary"><i class="ti ti-plus" aria-hidden="true"></i> Add client</button>
+    </div>
+    <div class="client-grid">${currentPod.clients.map(cl=>`
+      <div class="client-card ${cl.id===sel.id?'selected':''}" onclick="selectClient(${cl.id})">
+        <div class="client-name">${cl.name}</div>
+        <div class="client-meta">${cl.industry}</div>
+        <span class="goal-count"><i class="ti ti-target" style="font-size:11px" aria-hidden="true"></i> ${cl.goals.length} goal${cl.goals.length!==1?'s':''}</span>
+      </div>`).join("")}
+    </div>
+    <div class="divider"></div>
+    <div class="section-header">
+      <span class="section-title">Goals — ${sel.name}</span>
+      <button class="btn btn-primary"><i class="ti ti-plus" aria-hidden="true"></i> Add goal</button>
+    </div>
+    <div>${!sel.goals.length?`<div class="empty-state" style="padding:20px">No goals yet for this client</div>`:sel.goals.map(g=>renderGoalCard(g)).join("")}</div>`;
+}
+
+function fileIcon(type){
+  const map={pdf:"ti-file-type-pdf pdf",img:"ti-photo img",xls:"ti-table xls",doc:"ti-file doc"};
+  return map[type]||"ti-file doc";
+}
+
+function renderGoalCard(g){
+  const isOpen=openGoals[g.id];
+  const activeTab=activeTabs[g.id]||"goal";
+  const tabs=["goal","stop","start","continue"];
+  const labels={goal:"Goal",stop:"Stop",start:"Start",continue:"Continue"};
+  const tabData=g.tabs[activeTab];
+  return`<div class="goal-card">
+    <div class="goal-header" onclick="toggleGoal(${g.id})">
+      <div>
+        <div class="goal-title">${g.title}</div>
+        <div class="goal-subtitle">Created ${g.created}</div>
+      </div>
+      <i class="ti ti-chevron-down chevron ${isOpen?'open':''}" aria-hidden="true"></i>
+    </div>
+    ${isOpen?`
+    <div class="tabs">${tabs.map(t=>`<div class="tab ${activeTab===t?'active':''}" onclick="setTab(${g.id},'${t}')">${labels[t]}</div>`).join("")}</div>
+    <div class="tab-body">
+      <div class="tab-text">${tabData.text}</div>
+      <div class="attachments-label"><i class="ti ti-paperclip" style="font-size:12px;vertical-align:-1px;margin-right:4px" aria-hidden="true"></i>Attachments ${tabData.files.length?`(${tabData.files.length})`:""}</div>
+      ${tabData.files.length?`<div class="file-list">${tabData.files.map(f=>`
+        <div class="file-item">
+          <div class="file-left">
+            <div class="file-icon ${f.type}"><i class="ti ${fileIcon(f.type).split(' ')[0]}" aria-hidden="true"></i></div>
+            <div><div class="file-name">${f.name}</div><div class="file-size">${f.size}</div></div>
+          </div>
+          <div class="file-actions">
+            <button class="icon-btn" title="Preview"><i class="ti ti-eye" aria-hidden="true"></i></button>
+            <button class="icon-btn" title="Download"><i class="ti ti-download" aria-hidden="true"></i></button>
+          </div>
+        </div>`).join("")}</div>`:''}
+      <div class="upload-zone" onclick="alert('File upload — connect to backend')">
+        <i class="ti ti-cloud-upload" style="font-size:18px;margin-bottom:4px;display:block" aria-hidden="true"></i>
+        Click to upload a file
+      </div>
+    </div>`:''}
+  </div>`;
+}
+
+function toggleGoal(id){openGoals[id]=!openGoals[id];if(!activeTabs[id])activeTabs[id]="goal";renderClients();}
+function setTab(gid,tab){activeTabs[gid]=tab;renderClients();}
+function selectClient(id){selectedClient=currentPod.clients.find(c=>c.id===id);openGoals={};activeTabs={};renderClients();}
+
+function renderWeekly(){
+  document.getElementById("mainTitle").textContent="Weekly goals";
+  document.getElementById("roleBadge").textContent="Pod Manager";
+  const done=weeklyGoals.filter(w=>w.status==="done").length;
+  document.getElementById("mainContent").innerHTML=`
+    <div class="section-header">
+      <span class="section-title">Week of 9 Jun 2025</span>
+      <button class="btn btn-primary"><i class="ti ti-plus" aria-hidden="true"></i> Add task</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <div class="metric-card" style="flex:1"><div class="metric-label">Total</div><div class="metric-value">${weeklyGoals.length}</div></div>
+      <div class="metric-card" style="flex:1"><div class="metric-label">Done</div><div class="metric-value" style="color:#3B6D11">${done}</div></div>
+      <div class="metric-card" style="flex:1"><div class="metric-label">Pending</div><div class="metric-value" style="color:#854F0B">${weeklyGoals.length-done}</div></div>
+    </div>
+    <table class="weekly-table">
+      <thead><tr><th>Client</th><th>Task</th><th>Status</th><th></th></tr></thead>
+      <tbody>${weeklyGoals.map((w,i)=>`<tr>
+        <td style="font-weight:500">${w.client}</td>
+        <td>${w.task}</td>
+        <td><span class="status-pill ${w.status==="done"?"status-done":"status-pending"}">${w.status==="done"?"Done":"Pending"}</span></td>
+        <td><button class="icon-btn" onclick="toggleStatus(${i})"><i class="ti ti-${w.status==="done"?"x":"check"}" aria-hidden="true"></i></button></td>
+      </tr>`).join("")}</tbody>
+    </table>`;
+}
+
+function toggleStatus(i){weeklyGoals[i].status=weeklyGoals[i].status==="done"?"pending":"done";renderWeekly();}
+
+function renderReport(){
+  document.getElementById("mainTitle").textContent="Reports";
+  document.getElementById("roleBadge").textContent="Super Admin";
+  const tc=pods.reduce((a,p)=>a+p.clients.length,0);
+  const tg=pods.reduce((a,p)=>a+p.clients.reduce((b,c)=>b+c.goals.length,0),0);
+  const done=weeklyGoals.filter(w=>w.status==="done").length;
+  document.getElementById("mainContent").innerHTML=`
+    <div class="section-header">
+      <span class="section-title">All pods overview</span>
+      <div style="display:flex;gap:6px">
+        <button class="btn"><i class="ti ti-calendar" aria-hidden="true"></i> Weekly</button>
+        <button class="btn btn-primary"><i class="ti ti-download" aria-hidden="true"></i> Download PDF</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div class="metric-card"><div class="metric-label">Total pods</div><div class="metric-value">${pods.length}</div></div>
+      <div class="metric-card"><div class="metric-label">Total clients</div><div class="metric-value">${tc}</div></div>
+      <div class="metric-card"><div class="metric-label">Active goals</div><div class="metric-value">${tg}</div></div>
+      <div class="metric-card"><div class="metric-label">Weekly tasks done</div><div class="metric-value">${done}/${weeklyGoals.length}</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="section-title" style="margin-bottom:10px">Per pod</div>
+    ${pods.map(p=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin-bottom:8px;background:var(--color-background-secondary)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="width:10px;height:10px;border-radius:50%;background:${p.color};display:inline-block"></span>
+          <span style="font-size:13px;font-weight:500;color:var(--color-text-primary)">${p.name}</span>
+        </div>
+        <div style="display:flex;gap:16px;align-items:center;font-size:12px;color:var(--color-text-secondary)">
+          <span>${p.clients.length} clients</span>
+          <span>${p.clients.reduce((a,c)=>a+c.goals.length,0)} goals</span>
+          <button class="btn" style="padding:4px 10px;font-size:11px"><i class="ti ti-download" style="font-size:12px" aria-hidden="true"></i> PDF</button>
+        </div>
+      </div>`).join("")}`;
+}
+
+init();
+</script>
